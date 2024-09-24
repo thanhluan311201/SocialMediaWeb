@@ -5,14 +5,15 @@
     color: #fff;
     border-radius: 10px;
     padding: 30px 40px;
-    margin-right: 150px;
     display: flex;
     align-items: center;
+    overflow: hidden;
     transition: height .2 ease;
+    right: 100px;
 }
 
 .wrapper.active {
-    height: 720px;
+    height: 700px;
 }
 
 .wrapper .form-box.login {
@@ -21,7 +22,6 @@
 }
 
 .wrapper .form-box {
-    width: 100%;
     padding: 40px;
 }
 
@@ -31,7 +31,6 @@
 }
 
 .wrapper .form-box.register {
-    width: 420px;
     position: absolute;
     transition: none;
     translate: 500px;
@@ -81,7 +80,7 @@ form .input-box {
 
 form .remember-forgot {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     font-size: 14.5px;
     margin: -15px 0 15px;
 }
