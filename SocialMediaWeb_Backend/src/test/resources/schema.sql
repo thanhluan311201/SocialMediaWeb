@@ -1,0 +1,4 @@
+CREATE TABLE ROLE (
+    name VARCHAR(255) PRIMARY KEY,
+    description VARCHAR(255)
+);

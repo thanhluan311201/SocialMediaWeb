@@ -1,0 +1,23 @@
+#spring.application.name=SocialMediaWeb
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3307/social_media_db"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: root
+    password: 0909010954
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  signerKey: "uJ6cJ8E7LzKBP2OmlDt6voPhMfUMQqyXXZ0PoH4eJyVG2uolIxT7FRzHIxwi6ky4"
+  valid-duration: 30 # in seconds
+  refreshable-duration: 120 # in seconds
+
+
