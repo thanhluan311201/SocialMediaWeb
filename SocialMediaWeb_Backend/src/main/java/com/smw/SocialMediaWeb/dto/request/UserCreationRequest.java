@@ -30,6 +30,9 @@ public class UserCreationRequest {
     @NotBlank(message = "FIELD_BLANKED")
     String lastname;
 
+    @NotBlank(message = "FIELD_BLANKED")
+    String gender;
+
     @DobConstraint(min=16, message = "INVALID_DOB")
     @NotNull(message = "FIELD_BLANKED")
     LocalDate dob;

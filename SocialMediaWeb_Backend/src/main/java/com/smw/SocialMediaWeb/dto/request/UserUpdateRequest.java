@@ -23,6 +23,7 @@ public class UserUpdateRequest {
     String password;
     String firstname;
     String lastname;
+    String gender;
     
     @DobConstraint(min=18, message = "INVALID_DOB")
     LocalDate dob;

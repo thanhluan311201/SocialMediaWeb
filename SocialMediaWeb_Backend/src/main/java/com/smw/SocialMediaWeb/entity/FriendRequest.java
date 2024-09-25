@@ -1,12 +1,11 @@
 package com.smw.SocialMediaWeb.entity;
 
+import com.smw.SocialMediaWeb.enums.FriendRequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-
 
 @Getter
 @Setter
@@ -15,23 +14,20 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Post {
+public class FriendRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    String content;
-    LocalDateTime createdAt;
+    @ManyToOne
+    User requester;
 
     @ManyToOne
-    User author;
+    User receiver;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    Set<Comment> comments;
+    LocalDateTime requestTime;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    Set<Like> likes;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    Set<Share> shares;
+    @Enumerated(EnumType.STRING)
+    FriendRequestStatus status;
 }
+

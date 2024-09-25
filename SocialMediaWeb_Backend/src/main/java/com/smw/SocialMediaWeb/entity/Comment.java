@@ -5,8 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-
 
 @Getter
 @Setter
@@ -15,23 +13,17 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Post {
+public class Comment{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
     String content;
-    LocalDateTime createdAt;
+    LocalDateTime commentedAt;
 
     @ManyToOne
-    User author;
+    User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    Set<Comment> comments;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    Set<Like> likes;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    Set<Share> shares;
+    @ManyToOne
+    Post post;
 }
