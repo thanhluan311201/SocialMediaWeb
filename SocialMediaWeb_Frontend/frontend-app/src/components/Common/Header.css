@@ -1,0 +1,78 @@
+.header-logo {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+  }
+  
+  .search-bar {
+    position: relative;
+    border-radius: 4px; /* Example value based on theme */
+    background-color: rgba(255, 255, 255, 0.15);
+    margin-right: 16px;
+    margin-left: 0;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .search-bar:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  @media (min-width: 600px) {
+    .search-bar {
+      margin-left: 24px;
+      width: auto;
+    }
+  }
+  
+  .search-icon-wrapper {
+    padding: 0 16px;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .styled-input-base {
+    color: inherit;
+  }
+  
+  .styled-input-base .MuiInputBase-input {
+    padding: 8px 8px 8px 0;
+    padding-left: calc(1em + 32px); /* To make space for the search icon */
+    width: 100%;
+    transition: width 0.3s ease;
+  }
+  
+  @media (min-width: 960px) {
+    .styled-input-base .MuiInputBase-input {
+      width: 20ch;
+    }
+  }
+  
+  .flex-grow {
+    flex-grow: 1;
+  }
+  
+  .desktop-menu {
+    display: none;
+  }
+  
+  @media (min-width: 960px) {
+    .desktop-menu {
+      display: flex;
+    }
+  }
+  
+  .mobile-menu {
+    display: flex;
+  }
+  
+  @media (min-width: 960px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+  
