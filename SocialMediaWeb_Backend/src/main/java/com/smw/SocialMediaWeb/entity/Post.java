@@ -30,7 +30,7 @@ public class Post {
     Set<Comment> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    Set<Like> likes;
+    Set<PostLike> likes;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     Set<Share> shares;

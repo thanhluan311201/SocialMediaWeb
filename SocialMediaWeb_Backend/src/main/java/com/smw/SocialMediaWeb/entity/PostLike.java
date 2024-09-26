@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Like {
+public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -25,4 +25,7 @@ public class Like {
 
     @ManyToOne
     Post post;
+
+    @ManyToOne
+    Share share;
 }

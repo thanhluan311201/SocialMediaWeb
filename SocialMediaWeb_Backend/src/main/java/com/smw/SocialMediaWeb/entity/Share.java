@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,10 +20,17 @@ public class Share {
     String id;
 
     LocalDateTime sharedAt;
+    String content;
 
     @ManyToOne
     User user;
 
     @ManyToOne
     Post post;
+
+    @OneToMany(mappedBy = "share", cascade = CascadeType.ALL)
+    Set<Comment> comments;
+
+    @OneToMany(mappedBy = "share", cascade = CascadeType.ALL)
+    Set<PostLike> likes;
 }

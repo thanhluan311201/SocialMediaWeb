@@ -1,30 +1,21 @@
-package com.smw.SocialMediaWeb.entity;
+package com.smw.SocialMediaWeb.dto.response;
 
-import jakarta.persistence.*;
+import com.smw.SocialMediaWeb.entity.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class Message {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
-
+public class MessageResponse {
+    String messageId;
     String content;
-    LocalDateTime sentAt;
     Boolean isEdited;
-
-    @ManyToOne
     User sender;
-
-    @ManyToOne
     User receiver;
+    LocalDateTime sentAt;
 }
