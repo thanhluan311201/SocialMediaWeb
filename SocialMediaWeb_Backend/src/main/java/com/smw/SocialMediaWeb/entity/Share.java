@@ -1,5 +1,6 @@
 package com.smw.SocialMediaWeb.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +26,7 @@ public class Share {
     @ManyToOne
     User user;
 
+    @JsonIgnore
     @ManyToOne
     Post post;
 
