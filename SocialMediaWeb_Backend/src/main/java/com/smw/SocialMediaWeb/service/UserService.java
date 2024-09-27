@@ -57,6 +57,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(String userId){
         userRepository.deleteById(userId);
     }

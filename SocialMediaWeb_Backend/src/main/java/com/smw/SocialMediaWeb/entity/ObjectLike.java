@@ -1,5 +1,6 @@
 package com.smw.SocialMediaWeb.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class PostLike {
+public class ObjectLike {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -23,9 +24,15 @@ public class PostLike {
     @ManyToOne
     User user;
 
+    @JsonIgnore
     @ManyToOne
     Post post;
 
+    @JsonIgnore
     @ManyToOne
     Share share;
+
+    @JsonIgnore
+    @ManyToOne
+    Comment comment;
 }

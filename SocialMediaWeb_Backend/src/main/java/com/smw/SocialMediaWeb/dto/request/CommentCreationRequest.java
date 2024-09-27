@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentCreationRequest {
-    String postId;
+    String objectId;
     @NotBlank(message = "FIELD_BLANKED")
     String content;
 }

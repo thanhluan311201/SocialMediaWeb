@@ -4,6 +4,7 @@ import com.smw.SocialMediaWeb.dto.request.PostCreationRequest;
 import com.smw.SocialMediaWeb.dto.request.PostUpdateRequest;
 import com.smw.SocialMediaWeb.dto.response.PostResponse;
 import com.smw.SocialMediaWeb.entity.Post;
+import com.smw.SocialMediaWeb.entity.Share;
 import com.smw.SocialMediaWeb.entity.User;
 import com.smw.SocialMediaWeb.exception.AppException;
 import com.smw.SocialMediaWeb.exception.ErrorCode;
@@ -19,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -72,5 +74,9 @@ public class PostService {
         }
 
         postRepository.deleteById(postId);
+    }
+
+    public List<Post> getPosts(){
+        return postRepository.findAll();
     }
 }

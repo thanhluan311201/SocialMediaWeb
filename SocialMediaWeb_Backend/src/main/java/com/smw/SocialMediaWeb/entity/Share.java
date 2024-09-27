@@ -34,5 +34,5 @@ public class Share {
     Set<Comment> comments;
 
     @OneToMany(mappedBy = "share", cascade = CascadeType.ALL)
-    Set<PostLike> likes;
+    Set<ObjectLike> likes;
 }

@@ -18,4 +18,5 @@ public class SharePostResponse {
     User user;
     String content;
     LocalDateTime sharedAt;
+    Integer likeCount;
 }

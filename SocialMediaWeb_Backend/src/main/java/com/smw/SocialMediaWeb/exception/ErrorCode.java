@@ -16,6 +16,7 @@ public enum ErrorCode {
     UNAUTHORIZED(1007,"You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008,"Your age must be atleast {min}", HttpStatus.BAD_REQUEST),
     POST_NOT_FOUND(1009,"Post not found", HttpStatus.NOT_FOUND),
+    COMMENT_NOT_FOUND(1010, "Comment not found", HttpStatus.NOT_FOUND),
     ;
 
 

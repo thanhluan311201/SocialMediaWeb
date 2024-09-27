@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,9 +15,9 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentResponse {
-    String commentId;
+    Object objectId;
     String content;
     User user;
     LocalDateTime commentedAt;
-    Set<Comment> replies;
+    List<Comment> replies;
 }

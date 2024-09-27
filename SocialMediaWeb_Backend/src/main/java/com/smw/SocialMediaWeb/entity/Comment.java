@@ -1,5 +1,6 @@
 package com.smw.SocialMediaWeb.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -26,15 +27,21 @@ public class Comment{
     @ManyToOne
     User user;
 
+    @JsonIgnore
     @ManyToOne
     Post post;
 
+    @JsonIgnore
     @ManyToOne
     Share share;
 
+    @JsonIgnore
     @ManyToOne
     Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    Set<Comment> replies = new HashSet<>();
+    Set<Comment> replies;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    Set<ObjectLike> likes;
 }

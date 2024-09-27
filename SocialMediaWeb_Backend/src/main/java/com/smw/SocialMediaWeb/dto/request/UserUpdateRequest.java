@@ -1,5 +1,6 @@
 package com.smw.SocialMediaWeb.dto.request;
 
+import com.smw.SocialMediaWeb.entity.Role;
 import com.smw.SocialMediaWeb.validator.DobConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -27,5 +28,5 @@ public class UserUpdateRequest {
     
     @DobConstraint(min=18, message = "INVALID_DOB")
     LocalDate dob;
-    Set<String> roles;
+    List<String> roles;
 }

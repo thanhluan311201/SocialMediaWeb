@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LikeResponse {
-    String objectId; // dùng chung cho post, comment và shared post
+    Object objectId; // dùng chung cho post, comment và shared post
     LocalDateTime likedAt;
     User user;
 }
