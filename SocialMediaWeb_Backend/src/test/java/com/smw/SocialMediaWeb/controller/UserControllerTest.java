@@ -51,6 +51,7 @@ public class UserControllerTest {
                 .firstname("dang")
                 .lastname("luan")
                 .password("12345678")
+                .gender("nam")
                 .dob(dob)
                 .build();
 
@@ -59,6 +60,7 @@ public class UserControllerTest {
                 .username("thanhluan")
                 .firstname("dang")
                 .lastname("luan")
+                .gender("nam")
                 .dob(dob)
                 .build();
     }
