@@ -37,8 +37,7 @@ public class PostService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         Post post = postMapper.toPost(request);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        post.setCreatedAt(localDateTime);
+        post.setCreatedAt(LocalDateTime.now());
         post.setAuthor(user);
 
         return postMapper.toPostResponse(postRepository.save(post));

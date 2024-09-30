@@ -36,7 +36,6 @@ public class LikeService {
         Optional<Post> postOptional = postRepository.findById(objectId);
         Optional<Share> shareOptional = shareRepository.findById(objectId);
         Optional<Comment> commentOptional = commentRepository.findById(objectId);
-        LocalDateTime localDateTime = LocalDateTime.now();
 
         if(postOptional.isEmpty() && shareOptional.isEmpty() && commentOptional.isEmpty()){
 
@@ -50,7 +49,7 @@ public class LikeService {
                     .builder()
                     .post(post)
                     .user(user)
-                    .likedAt(localDateTime)
+                    .likedAt(LocalDateTime.now())
                     .build();
 
             return likePostMapper.toPostLikeResponse(likeRepository.save(postLike));
@@ -60,7 +59,7 @@ public class LikeService {
                     .builder()
                     .share(share)
                     .user(user)
-                    .likedAt(localDateTime)
+                    .likedAt(LocalDateTime.now())
                     .build();
 
             return likePostMapper.toShareLikeResponse(likeRepository.save(postLike));
@@ -70,7 +69,7 @@ public class LikeService {
                     .builder()
                     .comment(comment)
                     .user(user)
-                    .likedAt(localDateTime)
+                    .likedAt(LocalDateTime.now())
                     .build();
 
             return likePostMapper.toCommentLikeResponse(likeRepository.save(commentLike));

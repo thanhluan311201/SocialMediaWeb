@@ -46,8 +46,7 @@ public class ShareService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         Share share = shareMapper.toShare(request);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        share.setSharedAt(localDateTime);
+        share.setSharedAt(LocalDateTime.now());
         share.setUser(user);
         share.setPost(post);
 

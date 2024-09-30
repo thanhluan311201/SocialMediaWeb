@@ -12,7 +12,6 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
     @Named("toCommentResponse")
-    @Mapping(source = "id", target = "commentId")
     CommentResponse toCommentResponse(Comment comment);
 
     @Named("toPostCommentResponse")

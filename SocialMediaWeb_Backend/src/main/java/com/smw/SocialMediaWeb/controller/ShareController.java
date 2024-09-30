@@ -23,24 +23,24 @@ public class ShareController {
     ShareService shareService;
 
     @PostMapping("/{postId}")
-    ApiResponse<SharePostResponse> sharePost(@PathVariable String postId, @RequestBody @Valid SharePostRequest request){
-
+    ApiResponse<SharePostResponse> sharePost(@PathVariable String postId,
+                                             @RequestBody @Valid SharePostRequest request){
         return ApiResponse.<SharePostResponse>builder()
                 .result(shareService.sharePost(postId, request))
                 .build();
     }
 
-    @PutMapping("/{sharePostId}")
-    ApiResponse<SharePostResponse> updatePost(@PathVariable String sharePostId,
+    @PutMapping("/{sharedPostId}")
+    ApiResponse<SharePostResponse> updatePost(@PathVariable String sharedPostId,
                                               @RequestBody @Valid SharedPostUpdateRequest request){
         return ApiResponse.<SharePostResponse>builder()
-                .result(shareService.updateSharedPost(sharePostId, request))
+                .result(shareService.updateSharedPost(sharedPostId, request))
                 .build();
     }
 
-    @DeleteMapping("/{sharePostId}")
-    String deletePost(@PathVariable String sharePostId){
-        shareService.deleteSharedPost(sharePostId);
+    @DeleteMapping("/{sharedPostId}")
+    String deletePost(@PathVariable String sharedPostId){
+        shareService.deleteSharedPost(sharedPostId);
 
         return "Post has been deleted";
     }

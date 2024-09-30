@@ -27,4 +27,7 @@ public class Message {
 
     @ManyToOne
     User receiver;
+
+    @ManyToOne
+    Conversation conversation;
 }

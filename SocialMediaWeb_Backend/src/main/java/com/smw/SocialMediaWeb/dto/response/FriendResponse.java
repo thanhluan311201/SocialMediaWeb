@@ -1,5 +1,6 @@
-package com.smw.SocialMediaWeb.dto.request;
+package com.smw.SocialMediaWeb.dto.response;
 
+import com.smw.SocialMediaWeb.entity.User;
 import com.smw.SocialMediaWeb.enums.FriendRequestStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseFriendRequest {
-    FriendRequestStatus status;
+public class FriendResponse {
+    User user;
+    User friend;
 }

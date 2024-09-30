@@ -28,7 +28,6 @@ import java.util.Set;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentService {
-    LikeRepository likeRepository;
     CommentMapper commentMapper;
     PostRepository postRepository;
     ShareRepository shareRepository;

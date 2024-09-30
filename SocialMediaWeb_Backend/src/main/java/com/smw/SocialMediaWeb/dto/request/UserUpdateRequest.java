@@ -20,7 +20,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     @Size(min = 8, message = "INVALID_PASSWORD")
-    @NotBlank(message = "FIELD_BLANKED")
     String password;
     String firstname;
     String lastname;
