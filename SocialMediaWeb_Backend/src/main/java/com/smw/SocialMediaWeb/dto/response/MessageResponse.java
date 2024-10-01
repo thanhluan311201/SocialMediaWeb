@@ -1,10 +1,12 @@
 package com.smw.SocialMediaWeb.dto.response;
 
+import com.smw.SocialMediaWeb.entity.Message;
 import com.smw.SocialMediaWeb.entity.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -13,9 +15,6 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageResponse {
     String messageId;
-    String content;
-    Boolean isEdited;
     User sender;
-    User receiver;
-    LocalDateTime sentAt;
+    String content;
 }

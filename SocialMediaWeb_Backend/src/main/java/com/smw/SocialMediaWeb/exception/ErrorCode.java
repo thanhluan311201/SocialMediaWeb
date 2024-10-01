@@ -18,7 +18,10 @@ public enum ErrorCode {
     POST_NOT_FOUND(1009,"Post not found", HttpStatus.NOT_FOUND),
     COMMENT_NOT_FOUND(1010, "Comment not found", HttpStatus.NOT_FOUND),
     FRIEND_REQUEST_NOT_FOUND(1011, "Friend request not found", HttpStatus.NOT_FOUND),
-    INVALID_FRIEND_REQUEST(1011, "Cannot send friend request to yourself", HttpStatus.BAD_REQUEST),
+    INVALID_FRIEND_REQUEST(1012, "Cannot send friend request to yourself", HttpStatus.BAD_REQUEST),
+    MESSAGE_NOT_FOUND(1013, "Message not found", HttpStatus.NOT_FOUND),
+    CONVERSATION_NOT_FOUND(1014, "Conversation not found", HttpStatus.NOT_FOUND),
+    INVALID_MESSAGE_RECEIVER(1015, "Cannot send message to yourself", HttpStatus.BAD_REQUEST),
     ;
 
 

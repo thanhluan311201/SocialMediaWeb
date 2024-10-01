@@ -20,9 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +60,7 @@ public class FriendService {
             friend2.setAddedAt(LocalDateTime.now());
             friendRepository.save(friend2);
 
-            Set<User> users = new HashSet<>();
+            List<User> users = new ArrayList<>();
             users.add(currentUser);
             users.add(friendRequest.getRequester());
 

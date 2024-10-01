@@ -1,6 +1,7 @@
 package com.smw.SocialMediaWeb.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +21,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String username;
+
+    @JsonIgnore
     String password;
+
     String firstname;
     String lastname;
     String gender;
