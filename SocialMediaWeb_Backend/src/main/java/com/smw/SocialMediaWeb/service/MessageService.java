@@ -47,7 +47,7 @@ public class MessageService {
 
         List<User> users = Arrays.asList(currentUser, receiver);
 
-        Conversation conversation =conversationService.createConversation(users);
+        Conversation conversation = conversationService.createConversation(users);
 
         Message message1 = messageMapper.toMessage(request);
         message1.setSender(currentUser);
@@ -81,6 +81,10 @@ public class MessageService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+        if (!currentUser.equals(message1.getSender())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
         Message message2 = messageRepository.findBySenderAndReceiver(message1.getReceiver(), message1.getSender())
                 .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_FOUND));
 
@@ -104,11 +108,11 @@ public class MessageService {
         Message message2 = messageRepository.findBySenderAndReceiver(message1.getReceiver(), message1.getSender())
                 .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_FOUND));
 
-        if (message1.getSender().equals(currentUser)) {
-            messageRepository.delete(message1);
-            messageRepository.delete(message2);
-        } else if (message1.getReceiver().equals(currentUser)) {
-            messageRepository.delete(message2);
+        if (!message1.getSender().equals(currentUser)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
         }
+
+        messageRepository.delete(message1);
+        messageRepository.delete(message2);
     }
 }
