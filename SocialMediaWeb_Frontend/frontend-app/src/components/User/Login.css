@@ -12,22 +12,26 @@
     right: 100px;
 }
 
+body.login {
+    justify-content: right;
+}
+
 .greeting {
     position: fixed;
     right: 867px;
     top: 160px;
     justify-content: center;
     align-items: center;
-  }
-  
-  .greeting h1 {
-    color: slateblue;
-    font-size: 50px;
-  }
-  
-  .greeting h2 {
-    font-size: 30px;
-  }
+}
+
+.greeting h1 {
+color: slateblue;
+font-size: 50px;
+}
+
+.greeting h2 {
+font-size: 30px;
+}
 
 .wrapper.active {
     height: 700px;

@@ -27,6 +27,7 @@ public class LikeService {
     ShareRepository shareRepository;
     UserRepository userRepository;
     CommentRepository commentRepository;
+    NotificationService notificationService;
 
     public LikeResponse likePost(String objectId){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -39,9 +40,8 @@ public class LikeService {
 
         if(postOptional.isEmpty() && shareOptional.isEmpty() && commentOptional.isEmpty()){
 
-            throw new AppException(ErrorCode.POST_NOT_FOUND);
+            throw new AppException(ErrorCode.POST_OR_COMMENT_NOT_FOUND);
         }
-
 
         if(postOptional.isPresent()){
             Post post = postOptional.get();

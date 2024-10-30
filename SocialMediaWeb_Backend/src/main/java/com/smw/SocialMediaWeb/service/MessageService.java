@@ -16,11 +16,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,34 @@ public class MessageService {
     ConversationRepository conversationRepository;
     ConversationService conversationService;
     MessageMapper messageMapper;
+    NotificationService notificationService;
+    SimpMessagingTemplate messagingTemplate;
 
+    public List<Message> getMessageByConversation(String conversationId){
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(() -> new AppException(ErrorCode.CONVERSATION_NOT_FOUND));
+
+        boolean isParticipant = conversation.getParticipants().stream()
+                .anyMatch(user -> user.getId().equals(currentUser.getId()));
+
+        if (!isParticipant) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        List<Message> allMessages = messageRepository.findByConversationId(conversationId);
+        allMessages.sort(Comparator.comparing(Message::getSentAt));
+
+        // Lọc tin nhắn theo người gửi hiện tại
+        return allMessages.stream()
+                .filter(message ->
+                        (message.getSender().equals(currentUser)) ||
+                        (message.getReceiver().equals(currentUser)))
+                .collect(Collectors.toList());
+    }
 
     public MessageResponse sendMessage(MessageRequest request){
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -49,52 +78,39 @@ public class MessageService {
 
         Conversation conversation = conversationService.createConversation(users);
 
-        Message message1 = messageMapper.toMessage(request);
-        message1.setSender(currentUser);
-        message1.setReceiver(receiver);
-        message1.setConversation(conversation);
-        message1.setSentAt(LocalDateTime.now());
-        messageRepository.save(message1);
+        Message message = messageMapper.toMessage(request);
+        message.setSender(currentUser);
+        message.setReceiver(receiver);
+        message.setConversation(conversation);
+        message.setSentAt(LocalDateTime.now());
+        messageRepository.save(message);
 
-        Message message2 = messageMapper.toMessage(request);
-        message2.setSender(receiver);
-        message2.setReceiver(currentUser);
-        message2.setConversation(conversation);
-        message2.setSentAt(LocalDateTime.now());
-        messageRepository.save(message2);
+        MessageResponse messageResponse = messageMapper.toMessageResponse(message);
+        messagingTemplate.convertAndSend("/topic/messages/" + receiver.getId(), messageResponse);
 
         Set<Message> messages = new HashSet<>();
-        messages.add(message1);
-        messages.add(message2);
-
+        messages.add(message);
         conversation.setMessages(messages);
         conversationRepository.save(conversation);
 
-        return messageMapper.toMessageResponse(message1);
+        return messageResponse;
     }
 
     public MessageResponse updateMessage(String messageId, MessageUpdateRequest request){
-        Message message1 = messageRepository.findById(messageId)
+        Message message = messageRepository.findById(messageId)
                 .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_FOUND));
 
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        if (!currentUser.equals(message1.getSender())) {
+        if (!currentUser.equals(message.getSender())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
-        Message message2 = messageRepository.findBySenderAndReceiver(message1.getReceiver(), message1.getSender())
-                .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_FOUND));
+        messageMapper.updateMessage(message, request);
 
-        messageMapper.updateMessage(message1, request);
-        messageMapper.updateMessage(message2, request);
-
-        messageRepository.save(message1);
-        messageRepository.save(message2);
-
-        return messageMapper.toMessageResponse(message1);
+        return messageMapper.toMessageResponse(messageRepository.save(message));
     }
 
     public void deleteMessage(String messageId){
@@ -102,17 +118,13 @@ public class MessageService {
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        Message message1 = messageRepository.findById(messageId)
+        Message message = messageRepository.findById(messageId)
                 .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_FOUND));
 
-        Message message2 = messageRepository.findBySenderAndReceiver(message1.getReceiver(), message1.getSender())
-                .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_FOUND));
-
-        if (!message1.getSender().equals(currentUser)) {
+        if (!message.getSender().equals(currentUser)) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
-        messageRepository.delete(message1);
-        messageRepository.delete(message2);
+        messageRepository.delete(message);
     }
 }

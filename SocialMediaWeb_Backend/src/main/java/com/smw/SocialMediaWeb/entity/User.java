@@ -1,6 +1,7 @@
 package com.smw.SocialMediaWeb.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +29,7 @@ public class User {
     String firstname;
     String lastname;
     String gender;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
 
 

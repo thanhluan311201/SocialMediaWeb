@@ -30,5 +30,4 @@ public class Conversation {
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
     Set<Message> messages;
-
 }

@@ -5,10 +5,12 @@ import com.smw.SocialMediaWeb.entity.User;
 import com.smw.SocialMediaWeb.exception.AppException;
 import com.smw.SocialMediaWeb.exception.ErrorCode;
 import com.smw.SocialMediaWeb.repository.ConversationRepository;
+import com.smw.SocialMediaWeb.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ConversationService {
     ConversationRepository conversationRepository;
+    UserRepository userRepository;
 
     public Conversation createConversation(List<User> users){
         if (users == null || users.isEmpty()) {
@@ -50,5 +53,13 @@ public class ConversationService {
                 .build();
 
         return conversationRepository.save(conversation);
+    }
+
+    public List<Conversation> getConversationByUser(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(name)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        return conversationRepository.findByParticipants(currentUser);
     }
 }

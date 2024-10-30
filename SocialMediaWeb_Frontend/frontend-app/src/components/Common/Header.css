@@ -3,6 +3,11 @@
     height: 35px;
     border-radius: 6px;
   }
+
+  .logo a{
+    color: #fff;
+    text-decoration: none;
+  }
   
   .search-bar {
     position: relative;
@@ -66,13 +71,5 @@
     }
   }
   
-  .mobile-menu {
-    display: flex;
-  }
-  
-  @media (min-width: 960px) {
-    .mobile-menu {
-      display: none;
-    }
-  }
+
   

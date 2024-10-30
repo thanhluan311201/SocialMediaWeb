@@ -5,7 +5,6 @@ import { getMyInfo } from "../../services/userService";
 import { isAuthenticated } from "../../services/authenticationService";
 import Scene from "./Scene";
 import './Home.css'; // Import CSS file
-import Header from "../Common/Header";
 
 export default function Home() {
     const navigate = useNavigate();
@@ -27,15 +26,26 @@ export default function Home() {
         navigate("/login");
       } else {
         getUserDetails();
+        console.log(isAuthenticated);
       }
     }, [navigate]);
+
+    useEffect(() => {
+      document.body.className = 'home';  // Đặt class cho body là 'home'
+      console.log(isAuthenticated);
+      
+      return () => {
+          document.body.className = '';  // Xóa class khi component bị unmount
+      };
+    }, []);
   
     return (
-      <Scene>
+      <Scene hideSarch = {false}>
         {userDetails ? (
           <Card className="card">
             <Box className="container-box">
               <Typography className="welcome-text">
+                
                 Welcome back to Devteria, {userDetails.username}!
               </Typography>
               <Box className="info-row">

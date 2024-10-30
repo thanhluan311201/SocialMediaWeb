@@ -1,0 +1,86 @@
+.chat-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.sidebar {
+    width: 382px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    height: 100%;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.chat-item:hover {
+    background-color: #e0e0e0;
+}
+
+.chat-window {
+    flex-grow: 1;
+    width: 1146px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.messages {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Đảm bảo các tin nhắn chiếm hết chiều rộng */
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%; /* Giới hạn chiều rộng tối đa cho tin nhắn */
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column-reverse; /* Đảo ngược chiều hiển thị */
+    overflow-y: auto; /* Thêm cuộn dọc nếu cần */
+    height: 89%; /* Hoặc chiều cao mà bạn mong muốn */
+}
+
+.message.sent {
+    align-self: flex-end; /* Căn chỉnh tin nhắn của người gửi sang bên phải */
+    background-color: #dcf8c6; /* Màu nền cho tin nhắn của người gửi */
+    border-radius: 10px 10px 0 10px; /* Bo tròn các góc của tin nhắn gửi */
+}
+
+.message.received {
+    align-self: flex-start; /* Căn chỉnh tin nhắn của người nhận sang bên trái */
+    background-color: #f0f0f0; /* Màu nền cho tin nhắn của người nhận */
+    border-radius: 10px 10px 10px 0; /* Bo tròn các góc của tin nhắn nhận */
+}
+
+.message-text {
+    padding: 10px;
+    word-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
+}
+
+.input-area {
+    display: flex;
+    align-items: center;
+}
+
+.input-message {
+    flex-grow: 1;
+    margin-right: 10px;
+}

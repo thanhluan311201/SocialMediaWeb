@@ -3,6 +3,8 @@ import './Login.css';
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaCalendarAlt } from "react-icons/fa";
 import { logIn, register } from '../../services/authenticationService';
+import { useEffect } from 'react';
+import { getToken } from "../../services/localStorageService";
 
 
 export default function Login(){
@@ -42,6 +44,15 @@ export default function Login(){
             alert(errorResponse.message);
         }
     };
+
+    useEffect(() => {
+        document.body.className = 'login';  // Đặt class cho body là 'home'
+        
+        return () => {
+            document.body.className = '';  // Xóa class khi component bị unmount
+        };
+    }, []);
+
     return (
         <div>
             <div className='greeting'>

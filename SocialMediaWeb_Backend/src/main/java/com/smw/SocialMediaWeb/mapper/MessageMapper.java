@@ -13,6 +13,7 @@ import org.mapstruct.MappingTarget;
 public interface MessageMapper {
     Message toMessage(MessageRequest request);
     @Mapping(source = "sender", target = "sender")
+    @Mapping(source = "id", target = "messageId")
     MessageResponse toMessageResponse(Message message);
     void updateMessage(@MappingTarget Message message, MessageUpdateRequest request);
 }

@@ -4,6 +4,7 @@ import com.smw.SocialMediaWeb.dto.request.*;
 import com.smw.SocialMediaWeb.dto.response.PostResponse;
 import com.smw.SocialMediaWeb.dto.response.SharePostResponse;
 import com.smw.SocialMediaWeb.entity.Share;
+import com.smw.SocialMediaWeb.service.NotificationService;
 import com.smw.SocialMediaWeb.service.PostService;
 import com.smw.SocialMediaWeb.service.ShareService;
 import jakarta.validation.Valid;
@@ -21,12 +22,18 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShareController {
     ShareService shareService;
+    NotificationService notificationService;
 
     @PostMapping("/{postId}")
     ApiResponse<SharePostResponse> sharePost(@PathVariable String postId,
                                              @RequestBody @Valid SharePostRequest request){
+
+        var result = shareService.sharePost(postId, request);
+
+        notificationService.sendNotification(result.getShareId(), "SHARE");
+
         return ApiResponse.<SharePostResponse>builder()
-                .result(shareService.sharePost(postId, request))
+                .result(result)
                 .build();
     }
 

@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentResponse {
+    String commentId;
     Object objectId;
     String content;
     User user;

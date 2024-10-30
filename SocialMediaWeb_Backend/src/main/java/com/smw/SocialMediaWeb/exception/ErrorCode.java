@@ -22,6 +22,7 @@ public enum ErrorCode {
     MESSAGE_NOT_FOUND(1013, "Message not found", HttpStatus.NOT_FOUND),
     CONVERSATION_NOT_FOUND(1014, "Conversation not found", HttpStatus.NOT_FOUND),
     INVALID_MESSAGE_RECEIVER(1015, "Cannot send message to yourself", HttpStatus.BAD_REQUEST),
+    POST_OR_COMMENT_NOT_FOUND(1016, "Comment or post not found", HttpStatus.NOT_FOUND),
     ;
 
 

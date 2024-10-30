@@ -1,10 +1,10 @@
 import { API } from "../configurations/confiruration"
-import httpClient from "../configurations/httpClient"
-import { getToken, removeToken, setToken } from "./localStorageService";
+import axiosInstance from "./axiosInterceptor";
+import { getToken, removeToken, setToken, isTokenExpired } from "./localStorageService";
 
 
 export const logIn = async (username, password) => {
-    const response = await httpClient.post(API.LOGIN, {
+    const response = await axiosInstance.post(API.LOGIN, {
         username: username,
         password: password
     });
@@ -15,7 +15,7 @@ export const logIn = async (username, password) => {
 };
 
 export const register = async (username, password, firstname, lastname, dob) => {
-    const response = await httpClient.post(API.REGISTER, {
+    const response = await axiosInstance.post(API.REGISTER, {
         username: username,
         password: password,
         firstname: firstname,
@@ -31,5 +31,14 @@ export const logOut = () => {
 };
 
 export const isAuthenticated = () => {
-    return getToken();
+    const token = getToken();
+    return token && !isTokenExpired(token);
+};
+
+export const refreshToken = async (expiredToken) => {
+    const response = await axiosInstance.post(API.REFRESH_TOKEN, {
+        token: expiredToken
+    });
+
+    return response
 };

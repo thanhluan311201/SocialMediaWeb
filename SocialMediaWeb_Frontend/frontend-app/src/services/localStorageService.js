@@ -11,3 +11,11 @@ export const getToken = () => {
 export const removeToken = () => {
     localStorage.removeItem(KEY_TOKEN);
 };
+
+export const isTokenExpired = (token) => {
+    if (!token) return true;
+    const payload = JSON.parse(atob(token.split('.')[1])); // Giải mã payload
+    const exp = payload.exp;
+    const currentTime = Math.floor(Date.now() / 1000);
+    return currentTime > exp;
+};
