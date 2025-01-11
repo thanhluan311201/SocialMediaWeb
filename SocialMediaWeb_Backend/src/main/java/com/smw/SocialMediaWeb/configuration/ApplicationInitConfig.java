@@ -57,40 +57,37 @@ public class ApplicationInitConfig {
             Permission deleteSharedPostPermission = createPermissionIfNotFound(DefaultPermission.SHARED_POST_DELETE.getName(),
                     DefaultPermission.SHARED_POST_DELETE.getDescription());
 
-            Role adminRole = roleRepository.findById(DefaultRole.ADMIN.getName()).orElse(Role.builder()
-                    .name(DefaultRole.ADMIN.getName())
-                    .description(DefaultRole.ADMIN.getDescription())
-                    .permissions(Set.of(writeCommentPermission, writePostPermission, editCommentPermission,
-                            editPostPermission, editMessagePermission, editSharedPostPermission, deleteCommentPermission,
-                                deletePostPermission, deleteMessagePermission, deleteSharedPostPermission)) // Gán permissions cho role
-                    .build());
+            Role adminRole = roleRepository.findById(DefaultRole.ADMIN.getName()).orElseGet(() -> {
+                Role role = Role.builder()
+                        .name(DefaultRole.ADMIN.getName())
+                        .description(DefaultRole.ADMIN.getDescription())
+                        .permissions(Set.of(writeCommentPermission, writePostPermission, editCommentPermission,
+                                editPostPermission, editMessagePermission, editSharedPostPermission, deleteCommentPermission,
+                                deletePostPermission, deleteMessagePermission, deleteSharedPostPermission))
+                        .build();
+                return roleRepository.saveAndFlush(role);
+            });
 
-            Role userRole = roleRepository.findById(DefaultRole.USER.getName()).orElse(Role.builder()
-                    .name(DefaultRole.USER.getName())
-                    .description(DefaultRole.USER.getDescription())
-                    .permissions(Set.of(writeCommentPermission, writePostPermission))
-                    .build());
+            Role userRole = roleRepository.findById(DefaultRole.USER.getName()).orElseGet(() -> {
+                Role role = Role.builder()
+                        .name(DefaultRole.USER.getName())
+                        .description(DefaultRole.USER.getDescription())
+                        .permissions(Set.of(writeCommentPermission, writePostPermission))
+                        .build();
+                return roleRepository.saveAndFlush(role);
+            });
 
-            Role moderatorRole = roleRepository.findById(DefaultRole.MODERATOR.getName()).orElse(Role.builder()
-                    .name(DefaultRole.MODERATOR.getName())
-                    .description(DefaultRole.MODERATOR.getDescription())
-                    .permissions(Set.of(writeCommentPermission, writePostPermission, editCommentPermission,
-                            editPostPermission, editMessagePermission, editSharedPostPermission, deleteCommentPermission,
-                            deletePostPermission, deleteMessagePermission, deleteSharedPostPermission)) // Gán permissions cho role
-                    .build());
+            Role moderatorRole = roleRepository.findById(DefaultRole.MODERATOR.getName()).orElseGet(() -> {
+                Role role = Role.builder()
+                        .name(DefaultRole.MODERATOR.getName())
+                        .description(DefaultRole.MODERATOR.getDescription())
+                        .permissions(Set.of(writeCommentPermission, writePostPermission, editCommentPermission,
+                                editPostPermission, editMessagePermission, editSharedPostPermission, deleteCommentPermission,
+                                deletePostPermission, deleteMessagePermission, deleteSharedPostPermission))
+                        .build();
+                return roleRepository.saveAndFlush(role);
+            });
 
-            // Lưu role nếu chưa tồn tại
-            if (!adminRole.getName().equalsIgnoreCase("admin")) {
-                roleRepository.save(adminRole);
-            }
-
-            if (!userRole.getName().equalsIgnoreCase("user")) {
-                roleRepository.save(userRole);
-            }
-
-            if (!moderatorRole.getName().equalsIgnoreCase("moderator")) {
-                roleRepository.save(moderatorRole);
-            }
 
             // Tạo user admin nếu chưa tồn tại
             if (userRepository.findByUsername("admin").isEmpty()) {
