@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { IconButton, Badge, Menu, MenuItem, ListItemText } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { getNotifications } from "../../services/notificationService";
 import { Client } from '@stomp/stompjs';
 import { getToken } from "../../services/localStorageService";
 import { getMyInfo } from "../../services/userService";
 import { isAuthenticated } from "../../services/authenticationService";
+import { useNavigate } from "react-router-dom";
 
 const NotificationDropdown = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -13,6 +15,7 @@ const NotificationDropdown = () => {
   const [newNotifications, setNewNotifications] = useState(0);
   const socketUrl = 'http://localhost:8080/ws';
   const isMenuOpen = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchNotifications(); // Lấy danh sách thông báo ban đầu
@@ -75,28 +78,45 @@ const NotificationDropdown = () => {
     setAnchorEl(null);
   };
 
+  const handleNotificationSelect = async (url) => {
+    try {
+        navigate("/chat");
+        const response = await url;
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+    }
+  };
+
   return (
     <div>
-      <IconButton size="large" color="inherit" onClick={handleMenuOpen}>
+      <IconButton size="large" color="inherit" onClick={handleMenuOpen} 
+          sx={{
+            margin: "10px 0",
+            borderRadius: "10px",
+            width: "100%",
+            justifyContent: "flex-start",
+            gap: "20px"
+          }}>
         <Badge badgeContent={newNotifications} color="error">
-          <NotificationsIcon />
+          <NotificationsNoneOutlinedIcon sx={{width: "1.5em", height: "1.5em"}} />
         </Badge>
+        <p>Notifications</p>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
         open={isMenuOpen}
         onClose={handleMenuClose}
         PaperProps={{
-          style: { maxHeight: 300, width: '20ch' },
+          style: { maxHeight: 300, width: '35ch' },
         }}
       >
         
         {notifications.length > 0 ? (
           notifications.map((notification, index) => {
-            console.log(notifications);
-            console.log(notification.content);
             return(
-              <MenuItem key={index}>
+              <MenuItem key={index} 
+              onClick={() => navigate('/chat', { state: { redirectUrl: notification.redirectUrl } })}
+              >
               <ListItemText primary={notification.content} />
             </MenuItem>
             )

@@ -102,76 +102,76 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         return scheduler;
     }
 
-    @Bean
-    public HandshakeHandler customHandshakeHandler() {
-        return new DefaultHandshakeHandler() {
-
-            @Override
-            protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-                List<String> subProtocols = request.getHeaders().get("sec-websocket-protocol");
-                if (subProtocols != null && !subProtocols.isEmpty()) {
-                    String protocol = subProtocols.get(0);
-                    // Xử lý protocol nếu cần, ví dụ như log protocol
-                    log.info("Received subprotocol: {}", protocol);
-                }
-
-                // Sử dụng thông tin từ SecurityContext hoặc tạo một đối tượng Principal tùy chỉnh
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth != null) {
-                    return new UsernamePasswordAuthenticationToken(auth.getName(), auth.getCredentials(), auth.getAuthorities());
-                }
-                return null;
-            }
-        };
-    }
-
-    public class WebSocketAuthInterceptor extends HttpSessionHandshakeInterceptor {
-        @Override
-        public boolean beforeHandshake(ServerHttpRequest request,
-                                       ServerHttpResponse response,
-                                       WebSocketHandler wsHandler,
-                                       Map<String, Object> attributes) throws Exception {
-            log.info("Attempting WebSocket handshake");
-            List<String> subProtocols = request.getHeaders().get("sec-websocket-protocol");
-            if (subProtocols != null && !subProtocols.isEmpty()) {
-                String token = extractTokenFromSubProtocol(subProtocols.get(0));
-                log.info(subProtocols.toString());
-                log.info("Extracted token: {}", token);
-                if (token != null) {
-                    try {
-                        Jwt decodedToken = jwtDecoder.decode(token);
-                        String username = decodedToken.getClaimAsString("sub");
-                        // Thiết lập thuộc tính cho phiên người dùng
-                        attributes.put("username", username);
-                        log.info("username: {}", username);
-                        return true; // Cho phép kết nối
-                    } catch (JwtException e) {
-                        log.error("Token authentication failed: {}", e.getMessage());
-                        log.info("fail");
-                        response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                        return false; // Từ chối kết nối
-                    }
-                } else {
-                    log.error("Invalid subprotocol format");
-                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                    return false; // Từ chối kết nối
-                }
-            } else {
-                log.error("Missing authentication token in subprotocol");
-                response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                return false; // Từ chối kết nối
-            }
-        }
-    }
-
-    private String extractTokenFromSubProtocol(String subProtocol) {
-        // Kiểm tra định dạng subprotocol và trích xuất token
-        if (subProtocol.startsWith("base64url.bearer.authorization.k8s.io.")) {
-            String encodedToken = subProtocol.substring("base64url.bearer.authorization.k8s.io.".length());
-            // Giải mã base64url (có thể cần thêm padding)
-            return new String(Base64.getUrlDecoder().decode(encodedToken));
-        }
-        return null; // hoặc xử lý lỗi
-    }
+//    @Bean
+//    public HandshakeHandler customHandshakeHandler() {
+//        return new DefaultHandshakeHandler() {
+//
+//            @Override
+//            protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
+//                List<String> subProtocols = request.getHeaders().get("sec-websocket-protocol");
+//                if (subProtocols != null && !subProtocols.isEmpty()) {
+//                    String protocol = subProtocols.get(0);
+//                    // Xử lý protocol nếu cần, ví dụ như log protocol
+//                    log.info("Received subprotocol: {}", protocol);
+//                }
+//
+//                // Sử dụng thông tin từ SecurityContext hoặc tạo một đối tượng Principal tùy chỉnh
+//                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//                if (auth != null) {
+//                    return new UsernamePasswordAuthenticationToken(auth.getName(), auth.getCredentials(), auth.getAuthorities());
+//                }
+//                return null;
+//            }
+//        };
+//    }
+//
+//    public class WebSocketAuthInterceptor extends HttpSessionHandshakeInterceptor {
+//        @Override
+//        public boolean beforeHandshake(ServerHttpRequest request,
+//                                       ServerHttpResponse response,
+//                                       WebSocketHandler wsHandler,
+//                                       Map<String, Object> attributes) throws Exception {
+//            log.info("Attempting WebSocket handshake");
+//            List<String> subProtocols = request.getHeaders().get("sec-websocket-protocol");
+//            if (subProtocols != null && !subProtocols.isEmpty()) {
+//                String token = extractTokenFromSubProtocol(subProtocols.get(0));
+//                log.info(subProtocols.toString());
+//                log.info("Extracted token: {}", token);
+//                if (token != null) {
+//                    try {
+//                        Jwt decodedToken = jwtDecoder.decode(token);
+//                        String username = decodedToken.getClaimAsString("sub");
+//                        // Thiết lập thuộc tính cho phiên người dùng
+//                        attributes.put("username", username);
+//                        log.info("username: {}", username);
+//                        return true; // Cho phép kết nối
+//                    } catch (JwtException e) {
+//                        log.error("Token authentication failed: {}", e.getMessage());
+//                        log.info("fail");
+//                        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+//                        return false; // Từ chối kết nối
+//                    }
+//                } else {
+//                    log.error("Invalid subprotocol format");
+//                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
+//                    return false; // Từ chối kết nối
+//                }
+//            } else {
+//                log.error("Missing authentication token in subprotocol");
+//                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+//                return false; // Từ chối kết nối
+//            }
+//        }
+//    }
+//
+//    private String extractTokenFromSubProtocol(String subProtocol) {
+//        // Kiểm tra định dạng subprotocol và trích xuất token
+//        if (subProtocol.startsWith("base64url.bearer.authorization.k8s.io.")) {
+//            String encodedToken = subProtocol.substring("base64url.bearer.authorization.k8s.io.".length());
+//            // Giải mã base64url (có thể cần thêm padding)
+//            return new String(Base64.getUrlDecoder().decode(encodedToken));
+//        }
+//        return null; // hoặc xử lý lỗi
+//    }
 
 }

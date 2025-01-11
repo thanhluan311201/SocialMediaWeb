@@ -1,5 +1,6 @@
 package com.smw.SocialMediaWeb.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,6 +20,7 @@ public class ObjectLike {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     LocalDateTime likedAt;
 
     @ManyToOne

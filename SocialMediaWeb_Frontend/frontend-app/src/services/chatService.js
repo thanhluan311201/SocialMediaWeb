@@ -14,7 +14,9 @@ export const getMessages = async (conversationId) => {
     });
 };
 
-export const sendMessage = async(receiverId, content) => {
+export const sendMessage = async (receiverId, content) => {
     return await axiosInstance.post(API.SEND_MESSAGES, {
+        receiverId: receiverId,
+        content: content
     });
 };

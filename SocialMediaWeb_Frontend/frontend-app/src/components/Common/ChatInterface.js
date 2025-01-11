@@ -5,13 +5,16 @@ import { isAuthenticated } from "../../services/authenticationService";
 import MailIcon from '@mui/icons-material/Mail';
 import SearchIcon from '@mui/icons-material/Search';
 import { Client } from '@stomp/stompjs';
-import { getConversations, getMessages } from '../../services/chatService';
+import { getConversations, getMessages, sendMessage } from '../../services/chatService';
 import { getMyInfo } from "../../services/userService";
 import './ChatInterface.css'; // Import CSS file
 import SendIcon from '@mui/icons-material/Send';
 import Scene from '../Home/Scene';
 import { getToken } from "../../services/localStorageService";
 import { API } from '../../configurations/confiruration';
+import { useLocation } from 'react-router-dom';
+import { useDemoRouter } from "@toolpad/core/internal";
+
 
 export default function ChatInterface() {
     const [conversations, setConversations] = useState([]);
@@ -21,6 +24,9 @@ export default function ChatInterface() {
     const navigate = useNavigate();
     const [currentUserId, setCurrentUserId] = useState(null);
     const socketUrl = 'http://localhost:8080/ws';
+    const location = useLocation();
+    const redirectUrl = location.state?.redirectUrl;
+    const router = useDemoRouter('/chat');
   
     // Declare stompClient at the component level
     let stompClient = null;
@@ -45,17 +51,52 @@ export default function ChatInterface() {
     }, [navigate]);
 
     useEffect(() => {
+        if (redirectUrl) {
+            fetch(redirectUrl)
+                .then(response => {
+                    // Kiểm tra nếu phản hồi không phải JSON
+                    if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) {
+                        throw new Error("Phản hồi không phải là JSON hoặc có lỗi truy cập.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Xử lý dữ liệu cuộc trò chuyện
+                    console.log("Dữ liệu cuộc trò chuyện:", data);
+                })
+                .catch(error => console.error('Error fetching data:', error.message));
+        }
+    }, [redirectUrl]);
+    
+
+    useEffect(() => {
         const fetchConversations = async () => {
             try {
                 const response = await getConversations();
                 const data = response.data;
-
+        
+                // Kiểm tra xem data.result có phải là mảng không
                 if (Array.isArray(data.result)) {
-                    const conversationsWithMessages = data.result.map(conversation => ({
-                        ...conversation,
-                        lastMessage: conversation.messages.length > 0 ? conversation.messages[conversation.messages.length - 1].content : 'No messages',
-                        lastMessageTime: conversation.messages.length > 0 ? conversation.messages[conversation.messages.length - 1].sentAt : '',
-                    }));
+                    const conversationsWithMessages = data.result.map(conversation => {
+                        // Đảm bảo rằng conversation có tồn tại và có tin nhắn
+                        const messages = Array.isArray(conversation.messages) ? conversation.messages : [];
+        
+                        if (messages.length > 0) {
+                            const lastMessage = messages[messages.length - 1];
+                            return {
+                                ...conversation,
+                                lastMessage: lastMessage.content || 'No content', // Sử dụng giá trị mặc định nếu không có nội dung
+                                lastMessageTime: lastMessage.sentAt || '', // Sử dụng giá trị mặc định nếu không có thời gian
+                            };
+                        } else {
+                            // Nếu không có tin nhắn, gán giá trị mặc định
+                            return {
+                                ...conversation,
+                                lastMessage: 'No messages',
+                                lastMessageTime: '',
+                            };
+                        }
+                    });
                     setConversations(conversationsWithMessages);
                 } else {
                     console.error("Dữ liệu không phải là mảng:", data);
@@ -65,57 +106,61 @@ export default function ChatInterface() {
                 console.error('Error fetching conversations:', error);
             }
         };
+        
 
         fetchConversations();
 
-        stompClient = new Client({
-            webSocketFactory: () => {
-              return new WebSocket(socketUrl);
-            },
-            debug: (str) => { console.log(str); },
-            onConnect: () => {
-                console.log("Connected to WebSocket");
-
-                stompClient.subscribe('/topic/messages', (message) => {
-                    const newMessage = JSON.parse(message.body);
-                    const exists = messages.some(msg => msg.id === newMessage.id);
-                    if (!exists) {
-                        console.log(`New Message Sender: ${newMessage.sender}`);
-                        setMessages(prevMessages => [...prevMessages, newMessage]);
-
-                        // Cập nhật conversations với lastMessage và lastMessageTime mới
-                        setConversations(prevConversations => {
-                            return prevConversations.map(conversation => {
-                                if (conversation.id === newMessage.conversationId) {
-                                    return {
-                                        ...conversation,
-                                        lastMessage: newMessage.content,
-                                        lastMessageTime: newMessage.sentAt // Thay đổi thời gian gửi
-                                    };
-                                }
-                                return conversation;
-                            });
-                        });
-                    }
-                });
-            },
-            onStompError: (frame) => {
-              console.error('Broker reported error:', frame.headers['message'], frame.body);
-            },
-            onWebSocketError: (event) => {
-              console.error("WebSocket error:", event);
-            },
-            onWebSocketClose: (event) => {
-              console.warn("WebSocket connection closed:", event);
-            },
-        });
-      
-        stompClient.activate();
+        if (currentUserId) { // Chỉ kích hoạt khi currentUserId đã có giá trị
+            stompClient = new Client({
+                webSocketFactory: () => new WebSocket(socketUrl),
+                debug: (str) => { console.log(str); },
+                onConnect: () => {
+                    console.log("Connected to WebSocket");
     
-        return () => {
-            stompClient.deactivate();
-        };
-    }, []);
+                    stompClient.subscribe(`/user/${currentUserId}/message`, (message) => {
+                        const newMessage = JSON.parse(message.body);
+                        const exists = messages.some(msg => msg.id === newMessage.id);
+                        if (!exists) {
+                            console.log(`New Message Sender: ${newMessage.sender}`);
+                            setMessages(prevMessages => [...prevMessages, newMessage]);
+    
+                            setConversations(prevConversations => {
+                                return prevConversations.map(conversation => {
+                                    if (conversation.id === newMessage.conversationId) {
+                                        return {
+                                            ...conversation,
+                                            lastMessage: newMessage.content,
+                                            lastMessageTime: newMessage.sentAt 
+                                        };
+                                    }
+                                    return conversation;
+                                });
+                            });
+                        }
+                        const chatWindow = document.querySelector(".messages");
+                        if (chatWindow) {
+                            chatWindow.scrollTop = chatWindow.scrollHeight;
+                        }
+                    });
+                },
+                onStompError: (frame) => {
+                    console.error('Broker reported error:', frame.headers['message'], frame.body);
+                },
+                onWebSocketError: (event) => {
+                    console.error("WebSocket error:", event);
+                },
+                onWebSocketClose: (event) => {
+                    console.warn("WebSocket connection closed:", event);
+                },
+            });
+    
+            stompClient.activate();
+    
+            return () => {
+                stompClient.deactivate();
+            };
+        }
+    }, [currentUserId]);
 
     const handleChatSelect = async (conversationId) => {
         if (currentUserId) {
@@ -123,7 +168,7 @@ export default function ChatInterface() {
                 const response = await getMessages(conversationId);
                 const data = response.data;
                 console.log(data);
-                setMessages(data.result.reverse());
+                setMessages(data.result);
                 setCurrentChat(conversationId);
             } catch (error) {
                 console.error('Error fetching messages:', error);
@@ -131,25 +176,54 @@ export default function ChatInterface() {
         }
     };
 
-    const handleSendMessage = () => {
-        if (content && currentChat && stompClient) {
-            const messageData = {
-                conversationId: currentChat,
-                text: content,
-                sender: currentUserId, // Sử dụng ID của người dùng hiện tại
-            };
+    const handleSendMessage = async () => {
+        if (content && currentChat) {
+            const currentConversation = conversations.find(conversation => conversation.id === currentChat);
 
-            stompClient.publish({
-                destination: "/app/message", // Địa chỉ nơi bạn sẽ gửi tin nhắn
-                body: JSON.stringify(messageData),
-            });
+            if (!currentConversation) {
+                console.error("Không tìm thấy cuộc trò chuyện hiện tại.");
+                return;
+            }
 
-            setContent(''); // Reset nội dung input
+            const receiverId = Array.from(currentConversation.participants)?.find(user => user.id !== currentUserId)?.id;
+    
+            if (!receiverId) {
+                console.error("Không tìm thấy người nhận.");
+                return;
+            }
+    
+            console.log("Gửi tin nhắn tới:", receiverId, "Nội dung:", content);
+    
+            try {
+                const response = await sendMessage(receiverId, content);
+                console.log("Phản hồi khi gửi tin nhắn:", response.data.result);
+                if (response.status === 200) {
+                    console.log("Tin nhắn đã được gửi thành công:",  response.data.result);
+                    const newMessage = response.data.result; // Giả sử backend trả về tin nhắn đã được tạo
+                    console.log(`New Message Sender: ${newMessage.sender.id}`);
+                    setMessages(prevMessages => [...prevMessages, newMessage]);
+                    setContent(''); // Reset nội dung input
+                } else {
+                    const errorResponse = response.data;
+                    console.log(errorResponse.message || 'Có lỗi xảy ra khi gửi tin nhắn.');
+                }
+            } catch (error) {
+                console.error('Error sending message:', error.message);
+                alert('Có lỗi xảy ra, vui lòng thử lại.');
+            }
+        } else {
+            // console.log(currentChat);
+            // console.log(content);
+            // console.log(stompClient);
+            console.log("Vui lòng kiểm tra lại thông tin cuộc trò chuyện và nội dung tin nhắn.");
         }
     };
+    
+    
+    
 
     return (
-        <Scene hideSearch={true}>
+        <Scene router={router}>
             <Box className="chat-container">
                 <Box className="sidebar">
                     <Box className="search">
@@ -172,9 +246,7 @@ export default function ChatInterface() {
                         <>
                             <Typography variant="h5">{currentChat}</Typography>   
                             <Box className="messages">
-                                {messages.map((message, index) => {
-                                    console.log(`Message Sender: ${currentChat}`); // Log sender
-
+                                {[...messages].reverse().map((message, index) => {
                                     return (
                                         <Box 
                                             key={index} 

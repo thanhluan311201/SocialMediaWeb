@@ -3,6 +3,7 @@ package com.smw.SocialMediaWeb.controller;
 import com.smw.SocialMediaWeb.dto.request.*;
 import com.smw.SocialMediaWeb.dto.response.PostResponse;
 import com.smw.SocialMediaWeb.dto.response.SharePostResponse;
+import com.smw.SocialMediaWeb.entity.Post;
 import com.smw.SocialMediaWeb.entity.Share;
 import com.smw.SocialMediaWeb.service.NotificationService;
 import com.smw.SocialMediaWeb.service.PostService;
@@ -15,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/share")
 @Slf4j
@@ -23,6 +26,21 @@ import org.springframework.web.bind.annotation.*;
 public class ShareController {
     ShareService shareService;
     NotificationService notificationService;
+
+
+    @GetMapping
+    ApiResponse<List<Share>> getSharedPost(){
+        return ApiResponse.<List<Share>>builder()
+                .result(shareService.getSharedPosts())
+                .build();
+    }
+
+    @GetMapping("/{userId}")
+    ApiResponse<List<Share>> getSharedPostByUser(@PathVariable String userId){
+        return ApiResponse.<List<Share>>builder()
+                .result(shareService.getSharedPostsByUser(userId))
+                .build();
+    }
 
     @PostMapping("/{postId}")
     ApiResponse<SharePostResponse> sharePost(@PathVariable String postId,

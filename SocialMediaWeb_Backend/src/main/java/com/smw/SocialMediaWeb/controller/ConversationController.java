@@ -27,7 +27,6 @@ public class ConversationController {
 
     @GetMapping("")
     ApiResponse<List<Conversation>> getConversation(){
-        List<Conversation> conversations = conversationService.getConversationByUser();
 
         return ApiResponse.<List<Conversation>>builder()
                 .result(conversationService.getConversationByUser())

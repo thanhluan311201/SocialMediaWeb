@@ -1,5 +1,6 @@
 package com.smw.SocialMediaWeb.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -25,5 +26,6 @@ public class Friend {
     @ManyToOne
     User friend;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     LocalDateTime addedAt;
 }

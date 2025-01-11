@@ -5,10 +5,13 @@ import { getMyInfo } from "../../services/userService";
 import { isAuthenticated } from "../../services/authenticationService";
 import Scene from "./Scene";
 import './Home.css'; // Import CSS file
+import { useDemoRouter } from "@toolpad/core/internal"; // Hoặc thay bằng router thực tếs
 
 export default function Home() {
     const navigate = useNavigate();
     const [userDetails, setUserDetails] = useState({});
+    const router = useDemoRouter('/home');
+    console.log(router);
   
     const getUserDetails = async () => {
       try {
@@ -38,9 +41,13 @@ export default function Home() {
           document.body.className = '';  // Xóa class khi component bị unmount
       };
     }, []);
+
+    if (!isAuthenticated()) {
+      return null; // Bạn có thể xử lý việc này theo cách khác nếu cần
+    }
   
     return (
-      <Scene hideSarch = {false}>
+      <Scene router={router}>
         {userDetails ? (
           <Card className="card">
             <Box className="container-box">

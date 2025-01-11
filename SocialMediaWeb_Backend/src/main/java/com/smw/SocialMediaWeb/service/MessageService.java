@@ -86,7 +86,7 @@ public class MessageService {
         messageRepository.save(message);
 
         MessageResponse messageResponse = messageMapper.toMessageResponse(message);
-        messagingTemplate.convertAndSend("/topic/messages/" + receiver.getId(), messageResponse);
+        messagingTemplate.convertAndSendToUser(receiver.getId(),"/message", message);
 
         Set<Message> messages = new HashSet<>();
         messages.add(message);

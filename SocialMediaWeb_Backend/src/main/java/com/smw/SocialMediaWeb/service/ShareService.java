@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -87,5 +88,18 @@ public class ShareService {
 
     public List<Share> getSharedPosts(){
         return shareRepository.findAll();
+    }
+
+    public List<Share> getSharedPostsByUser(String userId){
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (shareRepository.findSharedPostsByUserId(userId, Sort.by(Sort.Direction.DESC, "createdAt"))
+                .get(0).getUser().getId().equals(currentUser.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return shareRepository.findSharedPostsByUserId(userId, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }

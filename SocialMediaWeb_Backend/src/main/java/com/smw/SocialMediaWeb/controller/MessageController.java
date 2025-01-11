@@ -28,8 +28,6 @@ public class MessageController {
 
 
     @PostMapping("")
-    @MessageMapping("/message")
-    @SendTo("/topic/messages")
     ApiResponse<MessageResponse> sendMessage(@RequestBody MessageRequest request){
         var result = messageService.sendMessage(request);
 

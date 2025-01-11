@@ -14,8 +14,16 @@ export const removeToken = () => {
 
 export const isTokenExpired = (token) => {
     if (!token) return true;
-    const payload = JSON.parse(atob(token.split('.')[1])); // Giải mã payload
-    const exp = payload.exp;
-    const currentTime = Math.floor(Date.now() / 1000);
-    return currentTime > exp;
+    const parts = token.split('.');
+    if (parts.length !== 3) return true; // Kiểm tra token có đúng định dạng JWT không
+    
+    try {
+        const payload = JSON.parse(atob(parts[1])); // Giải mã payload
+        const exp = payload.exp;
+        const currentTime = Math.floor(Date.now() / 1000);
+        return currentTime > exp;
+    } catch (error) {
+        console.error("Invalid token:", error);
+        return true;
+    }
 };

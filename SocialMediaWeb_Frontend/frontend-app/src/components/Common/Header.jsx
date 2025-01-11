@@ -9,9 +9,12 @@ import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { logOut } from "../../services/authenticationService";
 import './Header.css'; // Import CSS file
 import NotificationDropdown from './NotificationDropdown'; // Import NotificationDropdown component
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
 const SearchIconWrapper = styled("div")({
   padding: "0 16px",
@@ -84,23 +87,45 @@ export default function Header({ hideSearch }) {
       <div className="logo">
         <a href="/home">SocialMediaWeb</a>
       </div>
-      {hideSearch !== true ? (
-        <div className="search-bar">
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </div>
-      ) : null}
-      <Box className="flex-grow" />
+
       <Box className="desktop-menu">
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
+      <IconButton
+          size="large"
+          aria-label="show 4 new mails"
+          color="inherit"
+          sx={{
+            margin: "10px 0",
+            borderRadius: "10px",
+            justifyContent: "flex-start",
+            gap: "20px"
+          }}  href="/home">
+            <HomeOutlinedIcon sx={{ width: "1.5em", height: "1.5em" }}/>
+          <p>Home</p>
+        </IconButton>
+        <IconButton
+          size="large"
+          color="inherit"
+          sx={{
+            margin: "10px 0",
+            borderRadius: "10px",
+            justifyContent: "flex-start",
+            gap: "20px"
+          }}>
+          <SearchIcon sx={{ width: "1.5em", height: "1.5em" }} />
+          <p>Search</p>
+        </IconButton>
+        <IconButton
+          size="large"
+          aria-label="show 4 new mails"
+          color="inherit"
+          sx={{
+            margin: "10px 0",
+            borderRadius: "10px",
+            justifyContent: "flex-start",
+            gap: "20px"
+          }}  href="/chat">
+            <ChatBubbleOutlineOutlinedIcon sx={{ width: "1.5em", height: "1.5em" }}/>
+          <p>Messages</p>
         </IconButton>
 
         {/* Đặt NotificationDropdown trong desktop menu */}
@@ -108,15 +133,22 @@ export default function Header({ hideSearch }) {
 
         <IconButton
           size="large"
-          edge="end"
           aria-label="account of current user"
           aria-controls={menuId}
           aria-haspopup="true"
           onClick={handleOpenUserMenu}
           color="inherit"
+          sx={{
+            margin: "10px 0",
+            borderRadius: "10px",
+            justifyContent: "flex-start",
+            gap: "20px"
+          }}
         >
-        <AccountCircle />
+          <AccountCircleOutlinedIcon sx={{ width: "1.5em", height: "1.5em" }} />
+          <p>Profile</p>
         </IconButton>
+
       </Box>
       {renderMenu}
     </>

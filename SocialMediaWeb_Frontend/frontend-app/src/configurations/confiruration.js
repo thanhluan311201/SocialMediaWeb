@@ -8,6 +8,6 @@ export const API = {
     REGISTER: "/users",
     SEND_MESSAGES: "/message",
     GET_CONVERSATION: "/conversation",
-    REFRESH_TOKEN: "/refreshToken",
+    REFRESH_TOKEN: "/auth/refreshToken",
     GET_NOTIFICATIONS: "/notifications"
 }

@@ -4,7 +4,6 @@ import com.smw.SocialMediaWeb.dto.request.PostCreationRequest;
 import com.smw.SocialMediaWeb.dto.request.PostUpdateRequest;
 import com.smw.SocialMediaWeb.dto.response.PostResponse;
 import com.smw.SocialMediaWeb.entity.Post;
-import com.smw.SocialMediaWeb.entity.Share;
 import com.smw.SocialMediaWeb.entity.User;
 import com.smw.SocialMediaWeb.exception.AppException;
 import com.smw.SocialMediaWeb.exception.ErrorCode;
@@ -15,7 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -77,5 +76,18 @@ public class PostService {
 
     public List<Post> getPosts(){
         return postRepository.findAll();
+    }
+
+    public List<Post> getPostsByUser(String userId){
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (postRepository.findPostsByAuthorId(userId, Sort.by(Sort.Direction.DESC, "createdAt"))
+                .get(0).getAuthor().getId().equals(currentUser.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return postRepository.findPostsByAuthorId(userId, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }

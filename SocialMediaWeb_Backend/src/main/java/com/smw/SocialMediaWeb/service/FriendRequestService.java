@@ -16,10 +16,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -68,5 +70,9 @@ public class FriendRequestService {
         }
 
         friendRequestRepository.deleteById(friendRequestId);
+    }
+
+    public List<FriendRequest> getFriendRequestsByReceiver(String userId){
+        return friendRequestRepository.findFriendRequestsByReceiverId(userId, Sort.by(Sort.Direction.DESC, "requestTime"));
     }
 }

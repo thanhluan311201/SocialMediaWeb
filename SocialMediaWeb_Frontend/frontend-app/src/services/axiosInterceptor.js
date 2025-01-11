@@ -33,24 +33,39 @@ axiosInstance.interceptors.response.use(
         const originalRequest = error.config;
 
         if (error.response.status === 401 && !originalRequest._retry) {
-            try{
+            try {
                 originalRequest._retry = true;
                 const expiredToken = getToken();
-                // Gọi API refresh token
-                const { token } = await refreshToken(expiredToken);
-                setToken(token);
 
-                // Thử lại request với token mới
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                return axiosInstance(originalRequest);
-            } catch (error){
+                // Tạo một promise cho việc gọi API refresh token
+                const refreshPromise = refreshToken(expiredToken).then(response => {
+                    const { token } = response;
+                    setToken(token);
+
+                    // Cập nhật token vào headers
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+                    // Trả lại yêu cầu gốc với token mới
+                    return axiosInstance(originalRequest);
+                });
+
+                // Tạo một promise cho timeout (ví dụ 5 giây)
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => {
+                        reject(new Error('Request timeout'));
+                    }, 30000); // 5000 milliseconds = 5 seconds
+                });
+
+                // Chờ cho một trong hai promise hoàn thành
+                return await Promise.race([refreshPromise, timeoutPromise]);
+            } catch (error) {
                 window.location.href = '/login';
             }
-            
         }
 
         return Promise.reject(error);
     }
 );
+
 
 export default axiosInstance;

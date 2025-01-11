@@ -6,6 +6,7 @@ import com.smw.SocialMediaWeb.dto.request.PostCreationRequest;
 import com.smw.SocialMediaWeb.dto.request.PostUpdateRequest;
 import com.smw.SocialMediaWeb.dto.response.PermissionResponse;
 import com.smw.SocialMediaWeb.dto.response.PostResponse;
+import com.smw.SocialMediaWeb.entity.Post;
 import com.smw.SocialMediaWeb.entity.User;
 import com.smw.SocialMediaWeb.service.PostService;
 import jakarta.validation.Valid;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/post")
 @Slf4j
@@ -24,9 +27,22 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     PostService postService;
 
+    @GetMapping
+    ApiResponse<List<Post>> getPost(){
+        return ApiResponse.<List<Post>>builder()
+                .result(postService.getPosts())
+                .build();
+    }
+
+    @GetMapping("/{userId}")
+    ApiResponse<List<Post>> getPostsByUser(@PathVariable String userId){
+        return ApiResponse.<List<Post>>builder()
+                .result(postService.getPostsByUser(userId))
+                .build();
+    }
+
     @PostMapping
     ApiResponse<PostResponse> createPost(@RequestBody @Valid PostCreationRequest request){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return ApiResponse.<PostResponse>builder()
                 .result(postService.createPost(request))
