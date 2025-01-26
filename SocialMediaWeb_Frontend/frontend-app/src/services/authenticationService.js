@@ -14,13 +14,14 @@ export const logIn = async (username, password) => {
     return response;
 };
 
-export const register = async (username, password, firstname, lastname, dob) => {
+export const register = async (username, password, firstname, lastname, dob, gender) => {
     const response = await axiosInstance.post(API.REGISTER, {
         username: username,
         password: password,
         firstname: firstname,
         lastname: lastname,
-        dob: dob
+        dob: dob,
+        gender: gender
     });
 
     return response;
