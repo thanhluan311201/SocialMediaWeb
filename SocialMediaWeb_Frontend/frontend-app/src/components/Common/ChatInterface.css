@@ -7,11 +7,9 @@
 
 .sidebar {
     width: 340px;
-    background-color: #f0f0f0;
     padding: 10px;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid;
     height: 100%;
-    color: slateblue;
 }
 
 .search {
@@ -27,15 +25,14 @@
     cursor: pointer;
 }
 
-.chat-item:hover {
+/* .chat-item:hover {
     background-color: #e0e0e0;
-}
+} */
 
 .chat-window {
     flex-grow: 1;
     width: 1146px;
     padding: 10px;
-    background-color: #fff;
 }
 
 .messages {
@@ -62,13 +59,13 @@
 
 .message.sent {
     align-self: flex-end; /* Căn chỉnh tin nhắn của người gửi sang bên phải */
-    background-color: #dcf8c6; /* Màu nền cho tin nhắn của người gửi */
+    background-color: slateblue; 
     border-radius: 10px 10px 0 10px; /* Bo tròn các góc của tin nhắn gửi */
 }
 
 .message.received {
     align-self: flex-start; /* Căn chỉnh tin nhắn của người nhận sang bên trái */
-    background-color: #f0f0f0; /* Màu nền cho tin nhắn của người nhận */
+    background-color: slateblue; /* Màu nền cho tin nhắn của người nhận */
     border-radius: 10px 10px 10px 0; /* Bo tròn các góc của tin nhắn nhận */
 }
 

@@ -14,6 +14,8 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import ReplyIcon from '@mui/icons-material/Reply';
+import { useTheme, createTheme } from "@mui/material/styles";
+
 
 export default function Home() {
     const navigate = useNavigate();
@@ -87,21 +89,14 @@ export default function Home() {
             {Array.isArray(newfeeds) && newfeeds.length > 0 ? (
               [...newfeeds].reverse().map((newfeed, index) => (
                 <div className="container">
-                  <Card className="card">
+                  <Card 
+                      className="card"
+                  >
                   <Box key={newfeed.id || index} className="container-box">
-                    <Typography
-                     sx={{
-                      fontSize: "30px",
-                      fontWeight: "bold"
-                     }}
-                    >
+                    <Typography>
                       {newfeed.author.firstname + " " + newfeed.author.lastname}
                     </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "15px"
-                      }}
-                    >
+                    <Typography>
                       {formatPostTime(newfeed.createdAt)}
                     </Typography>
                     <Typography>{newfeed.content}</Typography>
@@ -109,9 +104,10 @@ export default function Home() {
                   <ButtonGroup 
                     sx={{
                       width: "100%",
-
                     }}
-                    variant="text" aria-label="Basic button group">
+                    variant="text"
+                    aria-label="Basic button group"
+                  >
                     <Button sx={{width: "33%"}}><ThumbUpIcon/></Button>
                     <Button sx={{width: "33%"}}><ModeCommentIcon/></Button>
                     <Button sx={{width: "33%"}}><ReplyIcon/></Button>

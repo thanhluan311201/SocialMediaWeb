@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, IconButton, Stack } from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
-import { createTheme, useTheme } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SearchIcon from "@mui/icons-material/Search";
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
@@ -22,7 +22,6 @@ import './Scene.css';
 
 const handleLogout = (event) => {
   logOut();
-  console.info("1sadawdasd");
   window.location.href = "/login";
 };
 
@@ -38,6 +37,9 @@ const demoTheme = createTheme({
   cssVariables: { colorSchemeSelector: 'data-toolpad-color-scheme' },
   colorSchemes: { light: true, dark: true },
 });
+
+
+
 
 function DemoPageContent({ pathname }) {
   const navigate = useNavigate();
@@ -77,22 +79,26 @@ function SidebarFooter({ mini }) {
 }
 
 
-export default function Scene({ children, router }) {
+export default function Scene({ children, router}) {
   console.log(router); // Định nghĩa đường dẫn ban đầu
+  console.log(demoTheme);
 
   return (
-    <AppProvider
-      navigation={NAVIGATION}
-      branding={{
-        logo: <img src={DarkLogo} alt="SMW logo" style={{ borderRadius: '50px' }} />,
-        title: 'SocialMediaWeb',
-      }}
-      theme={demoTheme}
-      router={router}>
-      <DashboardLayout slots={{ sidebarFooter: SidebarFooter }}>
-        <DemoPageContent pathname={router.pathname} />
-        {children}
-      </DashboardLayout>
-    </AppProvider>
+    <ThemeProvider theme={demoTheme}>
+      <AppProvider
+        navigation={NAVIGATION}
+        branding={{
+          logo: <img src={DarkLogo} alt="SMW logo" style={{ borderRadius: '50px' }} />,
+          title: 'SocialMediaWeb',
+          homeUrl: 'http://localhost:3000/home'
+        }}
+        theme={demoTheme}
+        router={router}>
+        <DashboardLayout slots={{ sidebarFooter: SidebarFooter }}>
+          <DemoPageContent pathname={router.pathname} />
+            {children}
+        </DashboardLayout>
+      </AppProvider>
+    </ThemeProvider>
   );
 }
