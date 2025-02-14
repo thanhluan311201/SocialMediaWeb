@@ -86,7 +86,8 @@ export default function Home() {
           
             {Array.isArray(newfeeds) && newfeeds.length > 0 ? (
               [...newfeeds].reverse().map((newfeed, index) => (
-                <Card className="card">
+                <div className="container">
+                  <Card className="card">
                   <Box key={newfeed.id || index} className="container-box">
                     <Typography
                      sx={{
@@ -116,6 +117,7 @@ export default function Home() {
                     <Button sx={{width: "33%"}}><ReplyIcon/></Button>
                   </ButtonGroup>
                 </Card>
+                </div>
               ))
             ) : (
               <Typography className="empty-message">Không có bài viết nào.</Typography>

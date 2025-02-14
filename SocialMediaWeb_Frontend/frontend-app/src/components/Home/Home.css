@@ -1,6 +1,7 @@
 .card {
   min-width: 350px;
   max-width: 500px;
+  width: 500px;
   height: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
@@ -8,38 +9,15 @@
   display: flex;
   flex-direction: column;
   margin: 20px;
+  padding-bottom: 1px;
 }
 
-body.home {
-  justify-content: center;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .container-box {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  gap: 10px;
-}
-
-
-
-
-
-.info-label {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.info-value {
-  font-size: 14px;
-}
-
-.loading-box {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  padding-bottom: 40px;
 }

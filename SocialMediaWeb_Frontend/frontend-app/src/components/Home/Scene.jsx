@@ -15,9 +15,10 @@ import Home from './Home';
 import DarkLogo from '../assests/DarkLogo.png';
 import { isAuthenticated, logOut } from "../../services/authenticationService";
 import { useNavigate } from "react-router-dom";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { SignOutButton, AccountPopoverFooter } from '@toolpad/core/Account';
 import Divider from '@mui/material/Divider';
+import './Scene.css';
 
 const handleLogout = (event) => {
   logOut();
@@ -30,7 +31,7 @@ const NAVIGATION = [
   { segment: 'home', title: 'Home', icon: <HomeOutlinedIcon /> },
   { segment: 'search', title: 'Search', icon: <SearchIcon /> },
   { segment: 'chat', title: 'Messages', icon: <ChatBubbleOutlineOutlinedIcon /> },
-  { segment: 'profile', title: 'Profile', icon: <AccountCircleOutlinedIcon />},
+  { segment: 'profile', title: 'Profile', icon: <AccountCircleOutlinedIcon /> },
 ];
 
 const demoTheme = createTheme({
@@ -56,18 +57,20 @@ function SidebarFooter({ mini }) {
   return (
     <Stack>
       <IconButton
-          size="small"
-          aria-label="log out"
-          color="inherit"
-          sx={{
-            margin: "10px 10px",
-            borderRadius: "10px",
-            justifyContent: "center",
-            gap: "10px",
-            padding: "12px 0"
-          }} onClick={handleLogout}>
-        <p>Log out</p>
-        <LogoutIcon />
+        size="small"
+        aria-label="log out"
+        color="inherit"
+        sx={{
+          margin: "10px 10px",
+          borderRadius: "10px",
+          justifyContent: "center",
+          gap: "10px",
+          padding: "12px 0"
+        }} onClick={handleLogout}>
+        <div className="logout-button" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <LogoutIcon />
+          {!mini && <p>Log out</p>}
+        </div>
       </IconButton>
     </Stack>
   );
@@ -78,17 +81,17 @@ export default function Scene({ children, router }) {
   console.log(router); // Định nghĩa đường dẫn ban đầu
 
   return (
-    <AppProvider 
-      navigation={NAVIGATION} 
+    <AppProvider
+      navigation={NAVIGATION}
       branding={{
-        logo: <img src={DarkLogo} alt="SMW logo" style={{borderRadius: '50px'}} />,
+        logo: <img src={DarkLogo} alt="SMW logo" style={{ borderRadius: '50px' }} />,
         title: 'SocialMediaWeb',
-      }} 
-      theme={demoTheme} 
+      }}
+      theme={demoTheme}
       router={router}>
-      <DashboardLayout slots={{sidebarFooter: SidebarFooter}}>
-          <DemoPageContent pathname={router.pathname} />
-          {children}
+      <DashboardLayout slots={{ sidebarFooter: SidebarFooter }}>
+        <DemoPageContent pathname={router.pathname} />
+        {children}
       </DashboardLayout>
     </AppProvider>
   );

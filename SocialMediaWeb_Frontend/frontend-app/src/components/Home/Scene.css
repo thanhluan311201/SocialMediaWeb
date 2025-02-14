@@ -19,6 +19,13 @@
   width: 20%;
 }
 
+@media (max-width: 70px) { /* Ẩn khi màn hình nhỏ hơn 768px */
+  .logout-button p {
+    display: none;
+  }
+}
+
+
 @media (max-width: 600px) {
   .icon-button {
     display: block;
