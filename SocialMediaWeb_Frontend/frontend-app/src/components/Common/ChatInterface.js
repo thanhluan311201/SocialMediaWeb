@@ -14,6 +14,8 @@ import { getToken } from "../../services/localStorageService";
 import { API } from '../../configurations/confiruration';
 import { useLocation } from 'react-router-dom';
 import { useDemoRouter } from "@toolpad/core/internal";
+import { format, formatDistanceToNow, isToday, isYesterday, differenceInHours } from "date-fns";
+import { vi } from "date-fns/locale";
 
 
 export default function ChatInterface() {
@@ -41,6 +43,20 @@ export default function ChatInterface() {
             console.error('Error fetching user details:', error);
         }
     };
+
+    const formatTime = (sentAt) => {
+        const sentDate = new Date(sentAt);
+      
+        if (differenceInHours(new Date(), sentDate) < 24) {
+          return formatDistanceToNow(sentDate, { addSuffix: true, locale: vi });
+        }
+      
+        if (isYesterday(sentDate)) {
+          return `Hôm qua, ${format(sentDate, "HH:mm")}`;
+        }
+      
+        return format(sentDate, "dd/MM/yyyy HH:mm");
+      };
 
     useEffect(() => {
         if (!isAuthenticated()) {
@@ -167,7 +183,7 @@ export default function ChatInterface() {
             try {
                 const response = await getMessages(conversationId);
                 const data = response.data;
-                console.log(data);
+                console.log(data.result);
                 setMessages(data.result);
                 setCurrentChat(conversationId);
             } catch (error) {
@@ -176,7 +192,9 @@ export default function ChatInterface() {
         }
     };
 
-    const handleSendMessage = async () => {
+    const handleSendMessage = async (event) => {
+        event.preventDefault();
+
         if (content && currentChat) {
             const currentConversation = conversations.find(conversation => conversation.id === currentChat);
 
@@ -236,7 +254,7 @@ export default function ChatInterface() {
                     {conversations.map((conversation) => (
                         <Box key={conversation.id} className="chat-item" onClick={() => handleChatSelect(conversation.id)}>
                             <Typography className="chat-name">{conversation.name}</Typography>
-                            <Typography className="chat-time">{new Date(conversation.lastMessageTime).toLocaleTimeString()}</Typography>
+                            <Typography className="chat-time">{formatTime(conversation.lastMessageTime)}</Typography>
                             <Typography className="chat-preview">{conversation.lastMessage}</Typography>
                         </Box>
                     ))}
@@ -253,7 +271,7 @@ export default function ChatInterface() {
                                             className={`message ${message.sender.id === currentUserId ? 'sent' : 'received'}`}
                                         >
                                             <Typography className="message-text">{message.content}</Typography>
-                                            <Typography className="message-time">{new Date(message.sentAt).toLocaleTimeString()}</Typography>
+                                            <Typography className="message-time">{formatTime(message.sentAt)}</Typography>
                                         </Box>
                                     );
                                 })}

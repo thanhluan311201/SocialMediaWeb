@@ -9,5 +9,6 @@ export const API = {
     SEND_MESSAGES: "/message",
     GET_CONVERSATION: "/conversation",
     REFRESH_TOKEN: "/auth/refreshToken",
-    GET_NOTIFICATIONS: "/notifications"
+    GET_NOTIFICATIONS: "/notifications",
+    GET_POSTS: "/post",
 }
