@@ -17,4 +17,5 @@ public class MessageResponse {
     String messageId;
     User sender;
     String content;
+    LocalDateTime sentAt;
 }

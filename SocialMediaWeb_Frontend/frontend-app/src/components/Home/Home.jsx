@@ -85,7 +85,6 @@ export default function Home() {
 
     return (
       <Scene router={router}>
-          
             {Array.isArray(newfeeds) && newfeeds.length > 0 ? (
               [...newfeeds].reverse().map((newfeed, index) => (
                 <div className="container">
@@ -118,7 +117,6 @@ export default function Home() {
             ) : (
               <Typography className="empty-message">Không có bài viết nào.</Typography>
             )}
-          
       </Scene>
     );
 }

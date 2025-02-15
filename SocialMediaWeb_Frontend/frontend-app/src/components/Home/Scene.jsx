@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, IconButton, Stack } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -7,23 +7,23 @@ import SearchIcon from "@mui/icons-material/Search";
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { AppProvider } from "@toolpad/core/AppProvider";
-import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import { DashboardLayout, ThemeSwitcher } from "@toolpad/core/DashboardLayout";
 import { useDemoRouter } from "@toolpad/core/internal"; // Hoặc thay bằng router thực tế
 import NotificationDropdown from '../Common/NotificationDropdown';
-import ChatInterface from '../Common/ChatInterface';
-import Home from './Home';
 import DarkLogo from '../assests/DarkLogo.png';
 import { isAuthenticated, logOut } from "../../services/authenticationService";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { SignOutButton, AccountPopoverFooter } from '@toolpad/core/Account';
 import Divider from '@mui/material/Divider';
+import { useColorScheme } from '@mui/material/styles';
 import './Scene.css';
 
 const handleLogout = (event) => {
   logOut();
   window.location.href = "/login";
 };
+
 
 const NAVIGATION = [
   { kind: 'header', title: 'Main Navigation' },
@@ -34,10 +34,11 @@ const NAVIGATION = [
 ];
 
 const demoTheme = createTheme({
-  cssVariables: { colorSchemeSelector: 'data-toolpad-color-scheme' },
   colorSchemes: { light: true, dark: true },
+  cssVariables: {
+    colorSchemeSelector: 'class'
+  }
 });
-
 
 
 
@@ -53,6 +54,21 @@ function DemoPageContent({ pathname }) {
   }, [pathname, navigate]); // Chạy khi pathname thay đổi
 
   return null;
+}
+
+function ToolbarActionsNotification() {
+  return (
+    <Stack direction="row">
+      <div>
+        <NotificationDropdown 
+        sx={{
+              display: { xs: 'inline', md: 'none' },
+        }}/>
+      </div>
+      <ThemeSwitcher />
+    </Stack>
+    
+  );
 }
 
 function SidebarFooter({ mini }) {
@@ -82,9 +98,10 @@ function SidebarFooter({ mini }) {
 export default function Scene({ children, router}) {
   console.log(router); // Định nghĩa đường dẫn ban đầu
   console.log(demoTheme);
+  const isChatRoute = router.pathname === '/chat';
+
 
   return (
-    <ThemeProvider theme={demoTheme}>
       <AppProvider
         navigation={NAVIGATION}
         branding={{
@@ -94,11 +111,19 @@ export default function Scene({ children, router}) {
         }}
         theme={demoTheme}
         router={router}>
-        <DashboardLayout slots={{ sidebarFooter: SidebarFooter }}>
-          <DemoPageContent pathname={router.pathname} />
+        {isChatRoute ? (
+          // Render DashboardLayout với collapse mặc định khi route là '/chat'
+          <DashboardLayout defaultSidebarCollapsed slots={{toolbarActions: ToolbarActionsNotification, sidebarFooter: SidebarFooter }}>
+            <DemoPageContent pathname={router.pathname} />
             {children}
-        </DashboardLayout>
+          </DashboardLayout>
+        ) : (
+          // Render DashboardLayout thông thường
+          <DashboardLayout slots={{toolbarActions: ToolbarActionsNotification, sidebarFooter: SidebarFooter }}>
+            <DemoPageContent pathname={router.pathname} />
+            {children}
+          </DashboardLayout>
+        )}
       </AppProvider>
-    </ThemeProvider>
   );
 }

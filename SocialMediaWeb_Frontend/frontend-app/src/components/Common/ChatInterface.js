@@ -45,18 +45,21 @@ export default function ChatInterface() {
     };
 
     const formatTime = (sentAt) => {
+        if (!sentAt) return 'Vừa xong';
+        
         const sentDate = new Date(sentAt);
-      
+        if (isNaN(sentDate.getTime())) return 'Thời gian không xác định';
+        
         if (differenceInHours(new Date(), sentDate) < 24) {
           return formatDistanceToNow(sentDate, { addSuffix: true, locale: vi });
         }
-      
         if (isYesterday(sentDate)) {
           return `Hôm qua, ${format(sentDate, "HH:mm")}`;
         }
-      
         return format(sentDate, "dd/MM/yyyy HH:mm");
       };
+      
+      
 
     useEffect(() => {
         if (!isAuthenticated()) {

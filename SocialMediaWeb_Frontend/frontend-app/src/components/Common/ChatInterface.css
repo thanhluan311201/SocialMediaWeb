@@ -8,9 +8,22 @@
 .sidebar {
     width: 340px;
     padding: 10px;
-    border-right: 1px solid;
+    position: relative;
     height: 100%;
 }
+
+
+.sidebar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0; 
+    width: 1px; 
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    mix-blend-mode: difference; 
+    pointer-events: none; 
+  }
 
 .search {
     display: flex;

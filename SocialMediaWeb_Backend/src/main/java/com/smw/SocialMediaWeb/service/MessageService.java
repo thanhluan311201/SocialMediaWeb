@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,7 @@ public class MessageService {
         message.setConversation(conversation);
         message.setSentAt(LocalDateTime.now());
         messageRepository.save(message);
+        log.info(String.valueOf(LocalDateTime.now()));
 
         MessageResponse messageResponse = messageMapper.toMessageResponse(message);
         messagingTemplate.convertAndSendToUser(receiver.getId(),"/message", message);

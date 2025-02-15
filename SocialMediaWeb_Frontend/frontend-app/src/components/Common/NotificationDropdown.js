@@ -89,18 +89,10 @@ const NotificationDropdown = () => {
 
   return (
     <div>
-      <IconButton size="large" color="inherit" onClick={handleMenuOpen} 
-          sx={{
-            margin: "10px 0",
-            borderRadius: "10px",
-            width: "100%",
-            justifyContent: "flex-start",
-            gap: "20px"
-          }}>
+      <IconButton type="button" size="small" color="inherit" onClick={handleMenuOpen} sx={{padding: "8px"}}>
         <Badge badgeContent={newNotifications} color="error">
-          <NotificationsNoneOutlinedIcon sx={{width: "1.5em", height: "1.5em"}} />
+          <NotificationsNoneOutlinedIcon sx={{width: "24px", height: "24px"}} />
         </Badge>
-        <p>Notifications</p>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
